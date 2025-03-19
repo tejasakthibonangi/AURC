@@ -37,6 +37,23 @@ namespace AURC.Web.API
 
             services.AddScoped<IVehicleSalesManager, VehicleSalesDataManager>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                    builder.WithOrigins("http://localhost:5138")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod());
+            });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                                   builder => builder
+                                  .AllowAnyOrigin()
+                                  .AllowAnyHeader()
+                                  .AllowAnyMethod()
+                                  .WithMethods("GET", "PUT", "DELETE", "POST", "PATCH")
+                                  );
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -62,6 +79,8 @@ namespace AURC.Web.API
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {
